@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bingo Game</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+          crossorigin="anonymous">
+          <style>
+            .green-cell {
+                background-color: #8EBA97;
+            }
+        
+            #getCard, #openDashBoard, #changeCode, #checkCard, #newCard {
+                border: 1px solid black;
+                border-radius: 25px;
+                padding: 5px;
+                transition: background-color 0.3s;
+            }
+        
+            #getCard:hover, #checkCard:hover, #newCard:hover {
+                background-color: #8EBA97;
+                border: 1px solid #8EBA97;
+            }
+        
+            #changeCode, #dashBoard {
+                border: none;
+                padding: 0;
+                text-decoration: underline;
+                color: inherit;
+                cursor: pointer;
+                transition: color 0.3s;
+                background: none;
+            }
+        
+            #changeCode:hover, #dashBoard:hover {
+                color: #588F5D; 
+            }
+        
+            /* Add new CSS rules for positioning the buttons */
+            #topButtons, #bottomButtons {
+                text-align: center;
+                margin-top: 20px;
+            }
+        
+            #topButtons button {
+                font-size: small;
+                margin-top: 300px;
+                margin-bottom: 0px;
+            }
+        
+            #bottomButtons button {
+                font-size: small;
+                margin-top: 0px;
+                margin-bottom: 300px;
+            }
+        
+            #checkCard {
+                margin-right: 195px;
+            }
+        
+            #changeCode {
+                margin-right: 175px;
+            }
+        
+            #introSection {
+                font-family: monospace;
+                width: 400px;
+                height: 100px;
+                text-align: center;
+                margin: auto;
+                margin-top: 250px;
+                border-color: black;
+            }
+        
+            .card {
+                margin: auto;
+                margin-top: 0px;
+            }
+        
+            body {
+                background-color: #EEA45B;
+                background-image: url(/imgs/bingobango9.jpg);
+            }
+        
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+        
+            #gameSection {
+                width: 100%;
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                flex-direction: column;
+                align-items: center;
+                background-repeat: no-repeat;
+                background-position-x: center;
+                background-position-y: bottom;
+                margin-top: 0px;
+                margin-bottom: 0px;
+            }
+        
+            #bingo {
+                margin-top: 15px;
+                margin-bottom: 1px;
+                border-width: 1px;
+            }
+
+            .bingoCard {
+    background-color: rgba(240, 248, 255, 0.5);
+}
+            td {
+                font-size:larger;
+                font-weight: 200px;
+                margin-top: 0px;
+                width: 70px;
+                height: 70px;
+                border: 1px black solid;
+                text-align: center;
+            }
+        </style>
+</head>
+<body>
+<section id="introSection">
+    <div class="card" style="width: 18rem;">
+        <img src="imgs/bingobango3.jpg" class="card-img-top">
+        <div class="card-body">
+            <h5 class="card-title">Game Code</h5>
+            <form id="gameCodeForm" action="">
+                <input id="gameCode" type="text" placeholder="Enter Here" required>
+            </form>
+            <br>
+            <button id="getCard"> Get Card </button>
+        </div>
+    </div>
+</section>
+
+<section id="gameSection" style="display: none">
+ 
+    <div id="topButtons">
+        <button id="changeCode">&lt;&lt;Change Code</button>
+        <button id="dashBoard">Dashboard>></button>
+        
+    </div>
+    <table id="bingo">
+        <td><b>B</b></td>
+        <td><b>I</b></td>
+        <td><b>N</b></td>
+        <td><b>G</b></td>
+        <td><b>O</b></td>
+    </table>
+    <table class="bingoCard">
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <div id="bottomButtons">
+        <button id="checkCard">Check Card</button>
+        <button id="newCard">New Card</button>
+    </div>
+</section>
+
+    <script>
+         $(document).ready(function(){
+            let code;
+            let card = []
+            let token;
+
+            $('.bingoCard td').click(function() {
+                $(this).toggleClass('green-cell');
+            });
+
+            $("#gameCode").on("change", function(){
+                code = $("#gameCode").val()
+                $("#codeTxt").html("Game Code: " + code);
+            })
+
+            $('#dashBoard').click(function(e){
+                e.preventDefault();
+                window.open(`http://www.hyeumine.com/bingodashboard.php?bcode=${code}`, "_blank");
+            })
+
+            $('#changeCode').click(function(e){
+                $("#introSection").show();
+                $("#gameSection").hide();
+                $('.bingoCard td').removeClass('green-cell');
+            })
+
+            $('#newCard').click(function(e){
+                $('.bingoCard td').removeClass('green-cell');
+                $("#getCard").click();
+            })
+
+            $("#getCard").bind('click', function(){
+                $.ajax({
+                    url:`http://www.hyeumine.com/getcard.php?bcode=${code}`,
+                    method:"GET",
+                    error: function(xhr, status, error){
+                        alert("Error!" + xhr.status);
+                    },
+                    success: (data) =>{
+                        state = 1;
+                        data = JSON.parse(data);
+                        token = data.playcard_token;
+                        var cells = document.querySelectorAll('.bingoCard td');
+                        var index = 0;
+                        try{
+                            card = [
+                                data.card.B,
+                                data.card.I,
+                                data.card.N,
+                                data.card.G,
+                                data.card.O
+                            ]
+                            for (var i = 0; i < 5; i++) {
+                                for(var j = 0; j < 5; j++){
+                                    cells[index].innerHTML = card[j][i]; 
+                                    index++;
+                                }
+                            }
+
+                            $("#introSection").hide();
+                            $("#gameSection").show();
+
+                        }catch(e){
+                            alert("Game Code does not exist!")
+                        }
+                    } 
+                })
+            })
+
+            $("#checkCard").bind('click', function(){
+                if(token){
+                    $.ajax({
+                        url: `http://www.hyeumine.com/checkwin.php?playcard_token=${token}`,
+                        method: 'GET',
+                        success: (data) =>{
+                            console.log(data)
+                            if(data == 1){
+                                alert("Congratulations, BINGO!")
+                            }else{
+                                alert("Not a Winning Card")
+                            }
+                        }
+                    })
+                }else{
+                    alert("Error")
+                }
+            })
+         })
+    </script>
+</body>
+</html>
